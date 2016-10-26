@@ -4,9 +4,9 @@ def chart(request):
     import numpy as np
 
     #put your server ip address
-    srv_ip = ''
+    srv_addr = ''
     pythoncom.CoInitialize()
-    server = win32.Dispatch('PISDK.PISDK.1').Servers('POSCOPOWER')
+    server = win32.Dispatch('PISDK.PISDK.1').Servers(srv_addr)
     pisdk = win32.gencache.EnsureModule('{0EE075CE-8C31-11D1-BD73-0060B0290178}',0, 1, 1,bForDemand = False)
     
     tag, point = [None] * 3, [None] * 3
