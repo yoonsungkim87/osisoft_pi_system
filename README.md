@@ -34,4 +34,4 @@ pythoncom.CoUninitialize()
 ```
 
 # Result
-![Result](
+![Result](https://github.com/yoonsungkim87/osisoft_pi_system/blob/master/trend.png)
