@@ -2,7 +2,7 @@
 ![PI](http://www.osisoft.com/images/osi-logo.png) ![django](https://avatars1.githubusercontent.com/u/27804?v=3&s=60)
 
 # Main function is getting data from PI Server
-'''
+```{.py}
 pythoncom.CoInitialize()
 server = win32.Dispatch('PISDK.PISDK.1').Servers('POSCOPOWER')
 pisdk = win32.gencache.EnsureModule('{0EE075CE-8C31-11D1-BD73-0060B0290178}',0, 1, 1,bForDemand = False)
@@ -34,4 +34,4 @@ for p in point:
     tmpTime.pop()
     trends.append([tmpTime, tmpValue])
 pythoncom.CoUninitialize()
-'''
+```
