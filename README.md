@@ -1,3 +1,3 @@
-# This code is based on OSI PI ProcessBook
+# This code is based on OSI PI ProcessBook & django
 ![PI](http://www.osisoft.com/images/osi-logo.png)
-![resilt](https://drive.google.com/file/d/0B0U5p8PmCKqydVNVbC1vSXlKODg/view?usp=sharing)
+![django](https://avatars1.githubusercontent.com/u/27804?v=3&s=200)
