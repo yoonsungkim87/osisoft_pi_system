@@ -1,7 +1,7 @@
 # Prerequisite
 - PI ProcessBook v3.2.3.0 ![PI](http://www.osisoft.com/images/osi-logo.png) 
 - Django v1.10.1 ![django](https://avatars1.githubusercontent.com/u/27804?v=3&s=60)
-- Anaconda v4.2.9 ![anaconda](https://www.continuum.io/sites/all/themes/continuum/assets/images/logos/logo-horizontal-large.svg)
+- Anaconda v4.2.9 ![anaconda](https://www.continuum.io/sites/all/themes/continuum/assets/images/logos/logo-horizontal-small.svg)
 
 # Main function is getting data from PI Server
 Before you commit code, you need to specify server address and tag name. If you are not using Django framework, we should not do CoInitialize() / CoUninitialize().
