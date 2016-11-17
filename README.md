@@ -32,3 +32,6 @@ tmpTime.pop()
 result_set = np.array([tmpTime, tmpValue], dtype=np.float64)
 pythoncom.CoUninitialize()
 ```
+
+# Result
+![Result](
