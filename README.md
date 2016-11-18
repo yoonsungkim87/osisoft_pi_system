@@ -36,5 +36,5 @@ result_set = np.array([tmpTime, tmpValue], dtype=np.float64)
 pythoncom.CoUninitialize()
 ```
 
-# Result
+# Example Result
 ![Result](https://github.com/yoonsungkim87/osisoft_pi_system/blob/master/trend.png)
