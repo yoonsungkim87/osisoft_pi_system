@@ -45,4 +45,4 @@ def chart():
     return render_template('chart.html', labels = labels, value1 = value1, value2 = value2)
  
 if __name__ == "__main__":
-    app.run(host='172.18.104.115')
+    app.run(host='me')
