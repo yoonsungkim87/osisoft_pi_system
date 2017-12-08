@@ -1,6 +1,5 @@
 # Prerequisite
 - PI ProcessBook v3.2.3.0 
-- Django v1.10.1
 - Anaconda v4.2.9
 
 # Main function *getting data from PI Server*
