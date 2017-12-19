@@ -19,13 +19,15 @@ def chart():
         point.append(server.PIPoints(x).Data)
     trends = []
     n_samples = 1000
+    space = 1
+    unit = 'h'
     
     for p in point:
         data2 = pisdk.IPIData2(p)
-        results = data2.InterpolatedValues2('*-'+str(n_samples)+'h','*','1h',asynchStatus=None)
+        results = data2.InterpolatedValues2('*-'+str(n_samples)+unit,'*',str(space)+unit,asynchStatus=None)
         tmpValue =[]
         tmpTime = []
-        i = 1 - n_samples
+        i = 1 - space * n_samples
         for v in results:
             try:
                 s = str(v.Value)
@@ -33,7 +35,7 @@ def chart():
                 tmpTime.append(i)
             except ValueError:
                 pass
-            i = i + 1
+            i += space
         tmpValue.pop()
         tmpTime.pop()
         trends.append([tmpTime, tmpValue])
