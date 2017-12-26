@@ -1,5 +1,6 @@
 import pythoncom
 import win32com.client as win32
+import pywintypes
 import numpy as np
 import time
 
@@ -12,36 +13,39 @@ err_cnt= 0
 reason = set()
 
 #tag = np.loadtxt('./tag.csv', dtype=np.str, delimiter=',')
-tag = ['51HBK27CP101XQ50',
-       '51HBK27CT101XQ50',
-       'AIT-512-501B',
-       'OCB02E7005-OUT',
-       'TIT-512-504',
-       'TIT-512-503A',
-       'TIT-512-503B',
-       'TIT-512-501',
-       'PIT-512-501',
-       'FIT-512-502-CAL',
-       'HV-512-504',
-       'PIT-512-552',
-       'ZT-FCV-512-501',
-       'OCB02E7008-OUT',
-       '51HNE10CQ102']
+tag = [
+    'SE851HIS', #Turbine Speed
+    'FM85404', #Starting Gas Valve
+    'FM85403', #Main Gas Valve
+    'FT85955', #WaterInj Flow
+    'FM85310', #IGV
+    'PT85178S', #P2C
+    'JT86001S', #MW
+    'TE8AVBP', #BP
+    'TE8AVTX' #Exh
+]
 
 for x in tag:
     point.append(server.PIPoints(x).Data)
-    trends = []
-    n_samples = 1000000
-    space = 10
-    unit = 's'
-    end_time = '2017-12-19 00:00'
-    #trends.append(np.linspace(space,n_samples*space,n_samples))
+trends = []
+n_samples = 250000
+space = 10
+unit = 's'
+end_time = '2014-04-01 00:00'
+#trends.append(np.linspace(space,n_samples*space,n_samples))
 
-    for p in point:
+for p in point:
+    if p is not None:
         data2 = pisdk.IPIData2(p)
         print('Extracting Data...')
-        results = data2.InterpolatedValues2(end_time+'-'+str(n_samples*space)+unit,end_time,str(space)+unit,asynchStatus=None)
-        time.sleep(1)
+        while True:
+            try:
+                results = data2.InterpolatedValues2(end_time+'-'+str(n_samples*space)+unit,end_time,str(space)+unit,asynchStatus=None)
+                print('Successful!')
+                break
+            except pywintypes.com_error:
+                print('Due to error, retrying...')
+                pass
         tmpValue =[]
         for v in results:
             try:
