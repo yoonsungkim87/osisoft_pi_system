@@ -78,4 +78,4 @@ print('Reason: ', end='')
 print(*reason if reason else '', sep=', ')
 
 trends = np.array(trends, dtype=np.float32).transpose()
-np.savetxt(end_time.split()[0]+'_'+end_time.split()[1]+'_'+str(space)+unit+'_'+str(n_samples)+'.csv', trends, delimiter=',')
+np.savetxt(end_time.split()[0]+'_'+str(space)+unit+'_'+str(n_samples)+'.csv', trends, delimiter=',')
