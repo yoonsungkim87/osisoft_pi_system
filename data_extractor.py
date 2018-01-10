@@ -13,20 +13,25 @@ reason = set()
 
 #tag = np.loadtxt('./tag.csv', dtype=np.str, delimiter=',')
 tag = [
-    'SE851HIS', #Turbine Speed
-    'TE85147', #T1C
-    'PT85425', #Fuel Gas Pressure
-    'FM85404', #Starting Gas Valve
-    'FM85403', #Main Gas Valve
-    'FT85955', #WaterInj Flow
-    'FM85310', #IGV
+    '80MBY10CS901_ZQ11', #Turbine Speed
+    '80MBA11CT901_ZQ01', #T1C
+    '80MBA11CP101_XQ01', #P1C
+    '80MBP13FP901_ZQ02', #Fuel Gas Pressure
+    '80MBP21FF901_ZQ01', # A Stage Gas Flow
+    '80MBP22FF901_ZQ01', # B Stage Gas Flow
+    '80MBP23FF901_ZQ01', # C Stage Gas Flow
+    '80MBP32FF901_ZQ01', # D Stage Gas Flow
+    '80MBP31FF901_ZQ01', # P Stage Gas Flow
+    '70MBP13AA001_ZB21', #Main ESV
+    '80MBA11DG011_XQ01', #IGV
+    '80MBA10FG100_ZV01', #HCO On
     
-    'PT85168', #Inlet Scroll DP
-    'PT85178S', #P2C
-    'TE85315S', #T2C
-    'JT86001S', #MW
-    'TE8AVBP', #BP
-    'TE8AVTX' #Exh
+    '80CJA00FF001_ZQ02', #Air Flow
+    '80MBA12CP901_ZQ01', #P2C
+    '80MBA12CT901_ZQ01', #T2C
+    '80MBY10CE901_XQ01', #MW
+    '80MBA28CT900_ZQ01', #BP
+    '80MBR10CT900_ZQ01' #Exh
 ]
 
 for x in tag:
@@ -35,7 +40,7 @@ trends = []
 n_samples = int(4*30*24*60)
 space = 1
 unit = 'm'
-end_time = '2014-09-01 00:00'
+end_time = '2015-09-01 00:00'
 #trends.append(np.linspace(space,n_samples*space,n_samples))
 
 for p in point:
