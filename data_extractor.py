@@ -13,34 +13,72 @@ reason = set()
 
 #tag = np.loadtxt('./tag.csv', dtype=np.str, delimiter=',')
 tag = [
-    '80MBY10CS901_ZQ11', #Turbine Speed
-    '80MBA11CT901_ZQ01', #T1C
-    '80MBA11CP101_XQ01', #P1C
-    '80MBP13FP901_ZQ02', #Fuel Gas Pressure
-    '80MBP21FF901_ZQ01', # A Stage Gas Flow
-    '80MBP22FF901_ZQ01', # B Stage Gas Flow
-    '80MBP23FF901_ZQ01', # C Stage Gas Flow
-    '80MBP32FF901_ZQ01', # D Stage Gas Flow
-    '80MBP31FF901_ZQ01', # P Stage Gas Flow
-    '70MBP13AA001_ZB21', #Main ESV
-    '80MBA11DG011_XQ01', #IGV
-    '80MBA10FG100_ZV01', #HCO On
+    'SE851HIS', # Turbine Speed
+    'TE85147', # T1C
+    'PT85169', # P1C
+    'PT023904', # Fuel Gas Pressure
+    'FM85404', # Starting Valve DMD
+    'FM85403', # Gas Valve DMD
+    'FM85310', # IGV DMD
+    'FM85951', # Water Injection CV DMD
     
-    '80CJA00FF001_ZQ02', #Air Flow
-    '80MBA12CP901_ZQ01', #P2C
-    '80MBA12CT901_ZQ01', #T2C
-    '80MBY10CE901_XQ01', #MW
-    '80MBA28CT900_ZQ01', #BP
-    '80MBR10CT900_ZQ01' #Exh
+    'JT86001S', # Active Power
+    'TE851DMD', # TEMP CNT DMD
+    
+    'TE85117', # DC2-1
+    'TE85118', # DC2-2
+    'TE85119', # DC3-1
+    'TE85120', # DC3-2
+    'TE85121', # DC4-1
+    'TE85122', # DC4-2
+    
+    'TE8SPBP', # SPT BP
+    'TE8AVBP', # AVG BP
+    
+    'TE85101S', # BP1
+    'TE85102S', # BP2
+    'TE85103S', # BP3
+    'TE85104S', # BP4
+    'TE85105S', # BP5
+    'TE85106S', # BP6
+    'TE85107S', # BP7
+    'TE85108S', # BP8
+    'TE85109S', # BP9
+    'TE85110S', # BP10
+    'TE85111S', # BP11
+    'TE85112S', # BP12
+    'TE85113S', # BP13
+    'TE85114S', # BP14
+    
+    'TE8SPTX', # SPT EXH
+    'TE8AVTX', # AVG EXH
+    
+    'TE85151', # EXH1
+    'TE85152', # EXH2
+    'TE85153', # EXH3
+    'TE85154', # EXH4
+    'TE85155', # EXH5
+    'TE85156', # EXH6
+    'TE85157', # EXH7
+    'TE85158', # EXH8
+    'TE85159', # EXH9
+    'TE85160', # EXH10
+    'TE85161', # EXH11
+    'TE85162', # EXH12
+    'TE85163', # EXH13
+    'TE85164', # EXH14
+    'TE85165', # EXH15
+    'TE85166', # EXH16
+    
 ]
 
 for x in tag:
     point.append(server.PIPoints(x).Data)
 trends = []
-n_samples = int(4*30*24*60)
+n_samples = int(7*24*60)
 space = 1
 unit = 'm'
-end_time = '2015-09-01 00:00'
+end_time = '2011-12-01 00:00'
 #trends.append(np.linspace(space,n_samples*space,n_samples))
 
 for p in point:
