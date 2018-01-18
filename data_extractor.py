@@ -70,6 +70,10 @@ tag = [
     'TE85165', # EXH15
     'TE85166', # EXH16
     
+    'PT85178S', # P2C
+    'TE85315S', # T2C
+    'PT75168', # Inlet DP
+    
 ]
 
 for x in tag:
@@ -78,7 +82,7 @@ trends = []
 n_samples = int(7*24*60)
 space = 1
 unit = 'm'
-end_time = '2011-12-01 00:00'
+end_time = '2018-01-17 00:00'
 #trends.append(np.linspace(space,n_samples*space,n_samples))
 
 for p in point:
