@@ -1,10 +1,9 @@
-from flask import Flask
-from flask import Markup
-from flask import render_template
+from flask import Flask, Markup, render_template, request
+
 app = Flask(__name__)
  
-@app.route("/")
-def chart():
+@app.route("/<path:varargs>", methods=['GET'])
+def chart(varargs=None):
     import pythoncom
     import win32com.client as win32
     import numpy as np
@@ -13,20 +12,22 @@ def chart():
     pisdk = win32.gencache.EnsureModule('{0EE075CE-8C31-11D1-BD73-0060B0290178}',0, 1, 1,bForDemand = False)
     
     point = []
-    tag = ['70MKG31CQ001A_XQ01','80MKG31CQ001A_XQ01']
-    for x in tag:
+    tags= varargs.split("/")
+    print(tags)
+    for x in tags:
         point.append(server.PIPoints(x).Data)
     trends = []
-    n_samples = 1000
+    n_samples = 100
     space = 1
     unit = 'h'
     
+    init = True
     for p in point:
         data2 = pisdk.IPIData2(p)
         results = data2.InterpolatedValues2('*-'+str(n_samples)+unit,'*',str(space)+unit,asynchStatus=None)
         tmpValue =[]
         tmpTime = []
-        i = 1 - space * n_samples
+        i = 0
         for v in results:
             try:
                 s = str(v.Value)
@@ -37,13 +38,12 @@ def chart():
             i += space
         tmpValue.pop()
         tmpTime.pop()
-        trends.append([tmpTime, tmpValue])
-        
-    labels = trends[0][0]
-    value1 = trends[0][1]
-    value2 = trends[1][1]
-    
-    return render_template('chart.html', labels = labels, value1 = value1, value2 = value2)
+        if init:
+            trends.append(tmpTime)
+            init = False
+        trends.append(tmpValue)
+    trends = np.array(trends).transpose().tolist()
+    return render_template('googlechart.html', tag=tags, trend=trends)
  
 if __name__ == "__main__":
     app.run(host='me')
