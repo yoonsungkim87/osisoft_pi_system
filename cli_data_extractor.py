@@ -12,7 +12,7 @@ err_cnt= 0
 reason = set()
 
 #tag = np.loadtxt('./tag.csv', dtype=np.str, delimiter=',')
-tag = [
+'''
     'SE851HIS', # Turbine Speed
     'TE85147', # T1C
     'PT85169', # P1C
@@ -72,17 +72,29 @@ tag = [
     
     'PT85178S', # P2C
     'TE85315S', # T2C
-    'PT75168', # Inlet DP
-    
+    'PT75168', # Inlet DP'''
+tag = [
+    '51MBA10EU001AXQ01',
+    '51MBA10EU006ZQ01',
+    '51MBA10EU001LZQ01',
+    '52MBA10EU001AXQ01',
+    '52MBA10EU006ZQ01',
+    '52MBA10EU001LZQ01',
+    '61MBA10EU001AXQ01',
+    '61MBA10EU006ZQ01',
+    '61MBA10EU001LZQ01',
+    '62MBA10EU001AXQ01',
+    '62MBA10EU006ZQ01',
+    '62MBA10EU001LZQ01',
 ]
 
 for x in tag:
     point.append(server.PIPoints(x).Data)
 trends = []
-n_samples = int(7*24*60)
+n_samples = int(2*24*60*60)
 space = 1
-unit = 'm'
-end_time = '2018-01-17 00:00'
+unit = 's'
+end_time = '2018-10-22 10:00'
 #trends.append(np.linspace(space,n_samples*space,n_samples))
 
 for p in point:
