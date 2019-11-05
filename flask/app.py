@@ -8,10 +8,11 @@ pisdk = win32.gencache.EnsureModule('{0EE075CE-8C31-11D1-BD73-0060B0290178}',0, 
 
 
 app = Flask(__name__)
+
  
 @app.route("/trend/<string:varargs>", methods=['GET'])
 def chart(varargs=None):
-    
+    #preprocessing
     point = []
     tags= varargs.split(",")
     print(tags)
@@ -21,8 +22,8 @@ def chart(varargs=None):
         except pywintypes.com_error as e:
             print('REASON: '+repr(e))
     trends = []
-    period = '0.1h'
-    
+    period = '0.25h'
+    #retrieve values
     i =0
     for p in point:
         data2 = pisdk.IPIData2(p)
@@ -48,6 +49,11 @@ def chart(varargs=None):
         i += 1
     #print(trends)
     return render_template('trend.html', tag=tags, trend=trends)
+
+ 
+@app.route("/test", methods=['GET'])
+def test():
+    return render_template("test.html")
  
 if __name__ == "__main__":
     app.run(host='me')
