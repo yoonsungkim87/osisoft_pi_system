@@ -1,4 +1,4 @@
-import pythoncom
+﻿import pythoncom
 import win32com.client as win32
 import pywintypes
 import numpy as np
@@ -39,11 +39,10 @@ for x in tag:
     point.append(server.PIPoints(x).Data)
 l = len(point)
 trends = []
-n_samples = int(36*30*24)
+n_samples = int(12*30*24*60)
 space = 1
-unit = 'h'
-end_time = '2019-10-31 00:00'
-#trends.append(np.linspace(space,n_samples*space,n_samples))
+unit = 'm'
+end_time = '2019-11-20 00:00'
 
 printProgressBar(0, l, prefix = 'Progress:', suffix = 'Complete', length = 50)
 for i, p in enumerate(point):
