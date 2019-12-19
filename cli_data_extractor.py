@@ -39,10 +39,10 @@ for x in tag:
     point.append(server.PIPoints(x).Data)
 l = len(point)
 trends = []
-n_samples = int(12*30*24*60)
+n_samples = int(36*24*60)
 space = 1
 unit = 'm'
-end_time = '2019-11-20 00:00'
+end_time = '2019-12-18 00:00'
 
 printProgressBar(0, l, prefix = 'Progress:', suffix = 'Complete', length = 50)
 for i, p in enumerate(point):
@@ -57,9 +57,13 @@ for i, p in enumerate(point):
             except pywintypes.com_error:
                 #print('Error occured, retrying...')
                 pass
-        tmpValue =[]
+        tmpValue = []
+        tmpTime = []
         for v in results:
             try:
+                if i == 0:
+                    t = float(v.TimeStamp.LocalDate.timestamp())
+                    tmpTime.append(t)
                 s = str(v.Value)
                 tmpValue.append(float(s))
             except ValueError:
@@ -75,6 +79,9 @@ for i, p in enumerate(point):
                     finally:
                         err_cnt += 1
                         reason.add(str(v.Value))
+        if i == 0:
+            tmpTime.pop()
+            trends.append(tmpTime)
         tmpValue.pop()
         trends.append(tmpValue)
         printProgressBar(i + 1, l, prefix = 'Progress:', suffix = 'Complete', length = 50)
