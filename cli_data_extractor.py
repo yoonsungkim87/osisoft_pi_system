@@ -1,4 +1,4 @@
-﻿import pythoncom
+import pythoncom
 import win32com.client as win32
 import pywintypes
 import numpy as np
@@ -39,9 +39,9 @@ for x in tag:
     point.append(server.PIPoints(x).Data)
 l = len(point)
 trends = []
-n_samples = int(36*24*60)
+n_samples = int(30*24)
 space = 1
-unit = 'm'
+unit = 'h'
 end_time = '2019-12-18 00:00'
 
 printProgressBar(0, l, prefix = 'Progress:', suffix = 'Complete', length = 50)
@@ -73,9 +73,10 @@ for i, p in enumerate(point):
                     tmpValue.append(1.0)
                 else:
                     try:
-                        tmpValue.append(tmpValue[-1])
-                    except IndexError:
-                        tmpValue.append(0.0)
+                        tmpValue.append(np.nan)
+                    #    tmpValue.append(tmpValue[-1])
+                    #except IndexError:
+                    #    tmpValue.append(0.0)
                     finally:
                         err_cnt += 1
                         reason.add(str(v.Value))
@@ -93,4 +94,5 @@ print('Reason: ', end='')
 print(*reason if reason else '', sep=', ')
 
 trends = np.array(trends, dtype=np.float32).transpose()
+trends = trends[~np.isnan(trends).any(axis=1)]
 np.savetxt(end_time.split()[0]+'_'+str(space)+unit+'_'+str(n_samples)+'.csv', trends, delimiter=',')
