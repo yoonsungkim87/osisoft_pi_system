@@ -1,4 +1,4 @@
-import pythoncom
+﻿import pythoncom
 import win32com.client as win32
 import pywintypes
 import numpy as np
@@ -39,10 +39,10 @@ for x in tag:
     point.append(server.PIPoints(x).Data)
 l = len(point)
 trends = []
-n_samples = int(30*24)
-space = 1
-unit = 'h'
-end_time = '2019-12-18 00:00'
+n_samples = int(11*31*24*6)
+space = 10
+unit = 'm'
+end_time = '2020-05-11 00:00'
 
 printProgressBar(0, l, prefix = 'Progress:', suffix = 'Complete', length = 50)
 for i, p in enumerate(point):
@@ -67,9 +67,9 @@ for i, p in enumerate(point):
                 s = str(v.Value)
                 tmpValue.append(float(s))
             except ValueError:
-                if s == 'OFF':
+                if s == 'N RUN' or s == 'NRUN' or s == 'N OPEN':
                     tmpValue.append(0.0)
-                elif s == 'ON':
+                elif s == 'RUN' or s == 'OPEN':
                     tmpValue.append(1.0)
                 else:
                     try:

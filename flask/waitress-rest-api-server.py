@@ -51,7 +51,7 @@ class GroupLiveTags(Resource):
         result = {}
         for tag in tags:
             try:
-                result[tag] = str(server.PIPoints(tag).Data.Snapshot)
+                result[tag] = [str(server.PIPoints(tag).Data.Snapshot.TimeStamp.LocalDate), str(server.PIPoints(tag).Data.Snapshot)]
             except pywintypes.com_error as e:
                 abort(404, error="{} with {}".format(repr(e), tag))
         pythoncom.CoUninitialize()
