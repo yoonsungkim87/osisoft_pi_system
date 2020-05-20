@@ -114,4 +114,4 @@ api.add_resource(GroupRecordedTags, '/group-recorded-tags/<string:period>/<strin
 api.add_resource(GroupIPRecordedTags, '/group-ip-recorded-tags/<string:freq>/<string:period>/<string:tags>')
 
 ## Serve using waitress
-serve(app, port=8080)
+serve(app, host='me', port=8080)
