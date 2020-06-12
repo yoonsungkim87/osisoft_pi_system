@@ -220,7 +220,7 @@ class PredictPondLevel(Resource):
             
             i = i + 1
             
-        return {'PREDICT': pred_temp[0,:,0]}
+        return pred_temp[0,:,0].tolist()
     
 api.add_resource(TagsForKeyword, '/tags-for-keyword/<string:keyword>')
 api.add_resource(GroupLiveTags, '/group-live-tags/<string:tags>')
