@@ -229,4 +229,4 @@ api.add_resource(GroupIPRecordedTags, '/group-ip-recorded-tags/<string:freq>/<st
 api.add_resource(PredictPondLevel, '/predict-pond-level/<string:variables>')
 
 ## Serve using waitress
-serve(app, port=8080)
+serve(app, host='me', port=8080)
