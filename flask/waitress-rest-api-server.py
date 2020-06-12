@@ -113,7 +113,7 @@ class GroupIPRecordedTags(Resource):
 class PredictPondLevel(Resource):
     def get(self, variables):
 
-        variables = np.array(variables.split(","), dtype=np.float64)
+        variables = variables.split(",")
 
         '''
         pythoncom.CoInitialize()
