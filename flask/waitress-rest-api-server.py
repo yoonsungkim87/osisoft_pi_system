@@ -180,7 +180,7 @@ class PredictPondLevel(Resource):
         r3 = np.array(variables[2::4]*6, dtype=np.float64).reshape(6,-1)
         r4 = np.array(variables[3::4]*7, dtype=np.float64).reshape(7,-1)
         c2 = np.concatenate((r1,r2,r3,r4), axis=0)
-        #c3 = np.zeros((25,1))
+        c3 = np.zeros((25,1))
         var_temp = np.concatenate((c1,c2), axis=1)
 
 
