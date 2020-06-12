@@ -39,10 +39,10 @@ for x in tag:
     point.append(server.PIPoints(x).Data)
 l = len(point)
 trends = []
-n_samples = int(11*31*24*6)
+n_samples = int((12*30+11)*24*6)
 space = 10
 unit = 'm'
-end_time = '2020-05-11 00:00'
+end_time = '2020-06-10 00:00'
 
 printProgressBar(0, l, prefix = 'Progress:', suffix = 'Complete', length = 50)
 for i, p in enumerate(point):
@@ -94,5 +94,5 @@ print('Reason: ', end='')
 print(*reason if reason else '', sep=', ')
 
 trends = np.array(trends, dtype=np.float32).transpose()
-trends = trends[~np.isnan(trends).any(axis=1)]
+#trends = trends[~np.isnan(trends).any(axis=1)]
 np.savetxt(end_time.split()[0]+'_'+str(space)+unit+'_'+str(n_samples)+'.csv', trends, delimiter=',')
