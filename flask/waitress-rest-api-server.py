@@ -115,63 +115,6 @@ class PredictPondLevel(Resource):
 
         variables = variables.split(",")
 
-        '''
-        pythoncom.CoInitialize()
-
-        server = win32.Dispatch('PISDK.PISDK').Servers('POSCOPOWER')
-        pisdk = win32.gencache.EnsureModule('{0EE075CE-8C31-11D1-BD73-0060B0290178}',0, 1, 1,bForDemand = False)
-
-        # historical data
-        result = {}
-        for tag in ['SEALPITDL', 'SEALEVEL']:
-            try:
-                data2 = pisdk.IPIData2(server.PIPoints(tag).Data)
-                pitmp = data2.InterpolatedValues2('*-1d','*',freq,asynchStatus=None)
-            except pywintypes.com_error as e:
-                abort(404, error="{}".format(repr(e)))
-            tmp = []
-            for val in pitmp:
-                v = str(val.Value)
-                t = str(val.TimeStamp.LocalDate)
-                tmp.append([t, v])
-            tmp.pop()
-            try:
-                v = str(server.PIPoints(tag).Data.Snapshot)
-                t = str(server.PIPoints(tag).Data.Snapshot.TimeStamp.LocalDate
-                tmp.append([t, v])
-            except pywintypes.com_error as e:
-                abort(404, error="{} with {}".format(repr(e), tag))
-            result[tag] = tmp
-
-        # current data
-        inputs = []
-        for tag in ['SEALPITDL','LIT040121','p040601arns','p040601brns','P040602ARNS','P040602BRNS','MOV040305AZTP','MOV040305BZTP','MOV040405AZTP','MOV040405BZTP','PT040303','PT040403','FV040201ZTP','FV040202ZTP','MOV040480ZOP']:
-            try:
-                inputs.append(float(str(server.PIPoints(tag).Data.Snapshot)))
-            except ValueError:
-                if s == 'N RUN' or s == 'NRUN' or s == 'N OPEN':
-                    inputs.append(0.0)
-                elif s == 'RUN' or s == 'OPEN':
-                    inputs.append(1.0)
-            except pywintypes.com_error as e:
-                abort(404, error="{} with {}".format(repr(e), tag))
-
-        pythoncom.CoUninitialize()
-
-        ### Crawling Part
-
-        URL = 'http://www.khoa.go.kr/oceangrid/grid/api/tideObsPre/search.do?ServiceKey=&ObsCode=DT_0001&Date={}{}{}&ResultType=json'
-        now = datetime.datetime.now()
-        tom = now + datetime.timedelta(days=1)
-        response1 = requests.get(URL.format(format(now.year, '04'),format(now.month,'02'),format(now.day,'02')))
-        response2 = requests.get(URL.format(format(tom.year, '04'),format(tom.month,'02'),format(tom.day,'02'))) 
-        temp1 = response1.json()['result']['data'] + response2.json()['result']['data']
-        temp2 = []
-        for line in temp1:
-            temp2.append(line['tide_level'])
-        sea_level = np.array(temp2, dtype=np.float64)
-        '''
-
         ### Input Creation Part
 
         c1 = np.array([variables[-1]] + [np.nan]*24, dtype=np.float64).reshape(-1,1)
@@ -191,7 +134,8 @@ class PredictPondLevel(Resource):
         #var_temp = np.zeros((25,16))
         prd_lgth = 24
         lb = 0
-        y_attr = (0,)
+        x_attr = (1,16,2,3,4,5,6,7,8,9,10,16,17,13,14,15,)
+        y_attr = (20,)
         comp_max = mm[0,:]
         comp_min = mm[1,:]
 
@@ -219,8 +163,10 @@ class PredictPondLevel(Resource):
             true_temp2 = None
             
             i = i + 1
+
+        pred_ = pred_temp * (comp_max - comp_min)[None,:len(x_attr)] + comp_min[None,:len(x_attr)]
             
-        return pred_temp[0,:,0].tolist()
+        return pred_[0,:,0].tolist()
     
 api.add_resource(TagsForKeyword, '/tags-for-keyword/<string:keyword>')
 api.add_resource(GroupLiveTags, '/group-live-tags/<string:tags>')
