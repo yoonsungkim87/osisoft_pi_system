@@ -3,7 +3,7 @@ from flask_cors import CORS
 from waitress import serve
 from flask_restful import reqparse, abort, Api, Resource
 
-import pythoncom, pywintypes, requests, json, datetime
+import pythoncom, pywintypes, requests, json, datetime, os
 import win32com.client as win32
 import numpy as np
 import tensorflow as tf
@@ -11,6 +11,8 @@ import tensorflow as tf
 app = Flask(__name__)
 CORS(app)
 api = Api(app)
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 #server = win32.Dispatch('PISDK.PISDK').Servers('POSCOPOWER')
 #pisdk = win32.gencache.EnsureModule('{0EE075CE-8C31-11D1-BD73-0060B0290178}',0, 1, 1,bForDemand = False)
