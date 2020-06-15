@@ -129,14 +129,16 @@ class PredictPondLevel(Resource):
         comp_min = mm[1,:]
 
         c1 = np.array([curr_pond_lvl] + [np.nan]*prd_lgth, dtype=np.float64).reshape(-1,1)
+        
+        c2 = np.array(pred_sea_lvl, dtype=np.float64).reshape(-1,1)
+
         r1 = np.array(variables[0::4]*6, dtype=np.float64).reshape(6,-1)
         r2 = np.array(variables[1::4]*6, dtype=np.float64).reshape(6,-1)
         r3 = np.array(variables[2::4]*6, dtype=np.float64).reshape(6,-1)
         r4 = np.array(variables[3::4]*7, dtype=np.float64).reshape(7,-1)
-        c2 = np.concatenate((r1,r2,r3,r4), axis=0)
-        c3 = np.array(pred_sea_lvl, dtype=np.float64).reshape(-1,1)
+        c3 = np.concatenate((r1,r2,r3,r4), axis=0)
+
         var_temp = np.concatenate((c1,c2,c3), axis=1)   
-        print(var_temp)     
 
         var_temp2 = ((var_temp - comp_min[None,:len(x_attr)]) / (comp_max - comp_min)[None,:len(x_attr)])
 
@@ -146,7 +148,6 @@ class PredictPondLevel(Resource):
         i = 0
         while pred_temp.shape[1] < lb + prd_lgth + 1:
             pred_temp2 = model.predict(pred_temp[:,-lb-1:,:])
-            print(pred_temp2)
             pred_temp3 = pred_temp2 * (comp_max - comp_min)[None,-len(y_attr):] + comp_min[None,-len(y_attr):]
             pred_temp4 = pred_temp[:,-1,:len(y_attr)] * (comp_max - comp_min)[None,:len(y_attr)] + comp_min[None,:len(y_attr)]
             pred_temp5 = ((pred_temp3 + pred_temp4 - comp_min[None,:len(y_attr)]) / (comp_max - comp_min)[None,:len(y_attr)]).reshape(-1,1,len(y_attr))
