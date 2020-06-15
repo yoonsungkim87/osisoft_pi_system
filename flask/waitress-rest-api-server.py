@@ -111,19 +111,20 @@ class GroupIPRecordedTags(Resource):
         return result
 
 class PredictPondLevel(Resource):
-    def get(self, variables):
+    def get(self, variables, curr_pond_lvl, pred_sea_lvl):
 
         variables = variables.split(",")
+        pred_sea_lvl = pred_sea_lvl.split(",")
 
         ### Input Creation Part
 
-        c1 = np.array([variables[-1]] + [np.nan]*24, dtype=np.float64).reshape(-1,1)
-        r1 = np.array(variables[0::4][:-1]*6, dtype=np.float64).reshape(6,-1)
+        c1 = np.array([curr_pond_lvl] + [np.nan]*24, dtype=np.float64).reshape(-1,1)
+        r1 = np.array(variables[0::4]*6, dtype=np.float64).reshape(6,-1)
         r2 = np.array(variables[1::4]*6, dtype=np.float64).reshape(6,-1)
         r3 = np.array(variables[2::4]*6, dtype=np.float64).reshape(6,-1)
         r4 = np.array(variables[3::4]*7, dtype=np.float64).reshape(7,-1)
         c2 = np.concatenate((r1,r2,r3,r4), axis=0)
-        c3 = np.zeros((25,1))
+        c3 = np.array(pred_sea_lvl, dtype=np.float64).reshape(-1,1)
         var_temp = np.concatenate((c1,c2,c3), axis=1)
 
 
@@ -172,7 +173,7 @@ api.add_resource(TagsForKeyword, '/tags-for-keyword/<string:keyword>')
 api.add_resource(GroupLiveTags, '/group-live-tags/<string:tags>')
 api.add_resource(GroupRecordedTags, '/group-recorded-tags/<string:period>/<string:tags>')
 api.add_resource(GroupIPRecordedTags, '/group-ip-recorded-tags/<string:freq>/<string:period>/<string:tags>')
-api.add_resource(PredictPondLevel, '/predict-pond-level/<string:variables>')
+api.add_resource(PredictPondLevel, '/predict-pond-level/<string:variables>/<string:curr_pond_lvl>/<string:pred_sea_lvl>')
 
 ## Serve using waitress
 serve(app, host='me', port=8080)
