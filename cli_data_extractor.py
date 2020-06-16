@@ -39,10 +39,10 @@ for x in tag:
     point.append(server.PIPoints(x).Data)
 l = len(point)
 trends = []
-n_samples = int((12*30+11)*24*6)
+n_samples = int((12*30+17)*24*6)
 space = 10
 unit = 'm'
-end_time = '2020-06-10 00:00'
+end_time = '2020-06-16 00:00'
 
 printProgressBar(0, l, prefix = 'Progress:', suffix = 'Complete', length = 50)
 for i, p in enumerate(point):
