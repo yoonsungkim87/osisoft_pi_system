@@ -122,8 +122,8 @@ class PredictPondLevel(Resource):
         model = tf.keras.models.load_model('myModel.h5')
         prd_lgth = 24
         lb = 0
-        x_attr = (1,16,2,3,4,5,6,7,8,9,17,18,12,13,14,15,)
-        y_attr = (20,)
+        x_attr = (1,16,2,3,4,5,18,19,14,15,)
+        y_attr = (21,)
         comp_max = mm[0,:]
         comp_min = mm[1,:]
 
