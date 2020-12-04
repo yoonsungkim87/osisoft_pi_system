@@ -5,18 +5,14 @@ from flask_restful import reqparse, abort, Api, Resource
 
 import pythoncom, pywintypes, requests, json, datetime, os
 import win32com.client as win32
-import numpy as np
-import tensorflow as tf
+#import numpy as np
+#import tensorflow as tf
 
 app = Flask(__name__)
 CORS(app)
 api = Api(app)
 
-tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
-
-#server = win32.Dispatch('PISDK.PISDK').Servers('POSCOPOWER')
-#pisdk = win32.gencache.EnsureModule('{0EE075CE-8C31-11D1-BD73-0060B0290178}',0, 1, 1,bForDemand = False)
-
+#tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
 class TagsForKeyword(Resource):
     def get(self, keyword):
@@ -63,7 +59,7 @@ class GroupLiveTags(Resource):
         return result
 
 class GroupRecordedTags(Resource):
-    def get(self, period, tags):
+    def get(self, period, tags, delay):
         
         tags= tags.split(",")
         pythoncom.CoInitialize()
@@ -73,7 +69,7 @@ class GroupRecordedTags(Resource):
         for tag in tags:
             try:
                 data2 = pisdk.IPIData2(server.PIPoints(tag).Data)
-                pitmp = data2.RecordedValues('*-'+period,'*',3,"",0,None)
+                pitmp = data2.RecordedValues('*-'+period+delay,'*'+delay,3,"",0,None)
             except pywintypes.com_error as e:
                 abort(404, error="{}".format(repr(e)))
             tmp = []
@@ -81,14 +77,14 @@ class GroupRecordedTags(Resource):
                 v = str(val.Value)
                 t = str(val.TimeStamp.LocalDate)
                 tmp.append([t, v])
-            tmp.pop()
+            #tmp.pop()
             result[tag] = tmp
         pythoncom.CoUninitialize()
         
         return result
     
 class GroupIPRecordedTags(Resource):
-    def get(self, period, freq, tags):
+    def get(self, period, freq, tags, delay):
         
         tags= tags.split(",")
         pythoncom.CoInitialize()
@@ -98,7 +94,7 @@ class GroupIPRecordedTags(Resource):
         for tag in tags:
             try:
                 data2 = pisdk.IPIData2(server.PIPoints(tag).Data)
-                pitmp = data2.InterpolatedValues2('*-'+period,'*',freq,asynchStatus=None)
+                pitmp = data2.InterpolatedValues2('*-'+period+delay,'*'+delay,freq,asynchStatus=None)
             except pywintypes.com_error as e:
                 abort(404, error="{}".format(repr(e)))
             tmp = []
@@ -106,12 +102,13 @@ class GroupIPRecordedTags(Resource):
                 v = str(val.Value)
                 t = str(val.TimeStamp.LocalDate)
                 tmp.append([t, v])
-            tmp.pop()
+            #tmp.pop()
             result[tag] = tmp
         pythoncom.CoUninitialize()
         
         return result
 
+'''
 class PredictPondLevel(Resource):
     def get(self, variables, curr_pond_lvl, pred_sea_lvl):
 
@@ -160,12 +157,13 @@ class PredictPondLevel(Resource):
         pred_ = pred_temp * (comp_max - comp_min)[None,:len(x_attr)] + comp_min[None,:len(x_attr)]
             
         return pred_[0,:,0].tolist()
+'''
     
 api.add_resource(TagsForKeyword, '/tags-for-keyword/<string:keyword>')
 api.add_resource(GroupLiveTags, '/group-live-tags/<string:tags>')
-api.add_resource(GroupRecordedTags, '/group-recorded-tags/<string:period>/<string:tags>')
-api.add_resource(GroupIPRecordedTags, '/group-ip-recorded-tags/<string:freq>/<string:period>/<string:tags>')
-api.add_resource(PredictPondLevel, '/predict-pond-level/<string:variables>/<string:curr_pond_lvl>/<string:pred_sea_lvl>')
+api.add_resource(GroupRecordedTags, '/group-recorded-tags/<string:period>/<string:tags>/<string:delay>')
+api.add_resource(GroupIPRecordedTags, '/group-ip-recorded-tags/<string:freq>/<string:period>/<string:tags>/<string:delay>')
+#api.add_resource(PredictPondLevel, '/predict-pond-level/<string:variables>/<string:curr_pond_lvl>/<string:pred_sea_lvl>')
 
 ## Serve using waitress
 serve(app, host='me', port=8080)
