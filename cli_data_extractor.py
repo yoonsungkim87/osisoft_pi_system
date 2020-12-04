@@ -3,6 +3,16 @@ import win32com.client as win32
 import pywintypes
 import numpy as np
 
+NUM_OF_SAMPLE = 5
+SPACE = 5
+UNIT = 'm'
+END_TIME ='*'
+DELAY = ''  # -20s when end time is *
+EXCPT = 'b' # r:reason, n:nan, b:blank
+
+if EXCPT != 'r' and EXCPT != 'n' and EXCPT != 'b':
+    raise('excpt type error!')
+
 # Print iterations progress
 def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
     """
@@ -39,10 +49,6 @@ for x in tag:
     point.append(server.PIPoints(x).Data)
 l = len(point)
 trends = []
-n_samples = int((12*30+17)*24*6)
-space = 10
-unit = 'm'
-end_time = '2020-06-16 00:00'
 
 printProgressBar(0, l, prefix = 'Progress:', suffix = 'Complete', length = 50)
 for i, p in enumerate(point):
@@ -51,7 +57,7 @@ for i, p in enumerate(point):
         #print('Extracting Data...')
         while True:
             try:
-                results = data2.InterpolatedValues2(end_time+'-'+str(n_samples*space)+unit,end_time,str(space)+unit,asynchStatus=None)
+                results = data2.InterpolatedValues2(END_TIME+DELAY+'-'+str(int(NUM_OF_SAMPLE)*SPACE)+UNIT,END_TIME+DELAY,str(SPACE)+UNIT,asynchStatus=None)
                 #print('**************************Successful!')
                 break
             except pywintypes.com_error:
@@ -67,13 +73,16 @@ for i, p in enumerate(point):
                 s = str(v.Value)
                 tmpValue.append(float(s))
             except ValueError:
-                if s == 'N RUN' or s == 'NRUN' or s == 'N OPEN':
+                if s == 'N RUN' or s == 'NRUN' or s == 'N OPEN' or s == 'NSTART' or s == 'OFF':
                     tmpValue.append(0.0)
-                elif s == 'RUN' or s == 'OPEN':
+                elif s == 'RUN' or s == 'OPEN' or s == 'START' or s == 'ON':
                     tmpValue.append(1.0)
                 else:
                     try:
-                        tmpValue.append(np.nan)
+                        if EXCPT == 'r':
+                            tmpValue.append(s)
+                        else:
+                            tmpValue.append(np.nan)
                     #    tmpValue.append(tmpValue[-1])
                     #except IndexError:
                     #    tmpValue.append(0.0)
@@ -81,9 +90,9 @@ for i, p in enumerate(point):
                         err_cnt += 1
                         reason.add(str(v.Value))
         if i == 0:
-            tmpTime.pop()
+            #tmpTime.pop()
             trends.append(tmpTime)
-        tmpValue.pop()
+        #tmpValue.pop()
         trends.append(tmpValue)
         printProgressBar(i + 1, l, prefix = 'Progress:', suffix = 'Complete', length = 50)
         
@@ -93,6 +102,7 @@ print(err_cnt)
 print('Reason: ', end='')
 print(*reason if reason else '', sep=', ')
 
-trends = np.array(trends, dtype=np.float32).transpose()
-#trends = trends[~np.isnan(trends).any(axis=1)]
-np.savetxt(end_time.split()[0]+'_'+str(space)+unit+'_'+str(n_samples)+'.csv', trends, delimiter=',')
+trends = np.array(trends).transpose()
+if EXCPT == 'b':
+    trends = trends[~np.isnan(trends).any(axis=1)]
+np.savetxt(END_TIME.split()[0].replace('*','crnt')+DELAY+'_'+str(SPACE)+UNIT+'_'+str(int(NUM_OF_SAMPLE))+'_'+EXCPT+'.csv', trends, delimiter=',', fmt='%s')
