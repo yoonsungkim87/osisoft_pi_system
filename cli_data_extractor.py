@@ -3,10 +3,10 @@ import win32com.client as win32
 import pywintypes
 import numpy as np
 
-NUM_OF_SAMPLE = 5
+NUM_OF_SAMPLE = 12*15
 SPACE = 5
-UNIT = 'm'
-END_TIME ='*'
+UNIT = 's'
+END_TIME ='2020-08-09T13:00'
 DELAY = ''  # -20s when end time is *
 EXCPT = 'b' # r:reason, n:nan, b:blank
 
@@ -105,4 +105,4 @@ print(*reason if reason else '', sep=', ')
 trends = np.array(trends).transpose()
 if EXCPT == 'b':
     trends = trends[~np.isnan(trends).any(axis=1)]
-np.savetxt(END_TIME.split()[0].replace('*','crnt')+DELAY+'_'+str(SPACE)+UNIT+'_'+str(int(NUM_OF_SAMPLE))+'_'+EXCPT+'.csv', trends, delimiter=',', fmt='%s')
+np.savetxt(END_TIME.split()[0].replace('*','crnt').replace(':','')+DELAY+'_'+str(SPACE)+UNIT+'_'+str(int(NUM_OF_SAMPLE))+'_'+EXCPT+'.csv', trends, delimiter=',', fmt='%s')
