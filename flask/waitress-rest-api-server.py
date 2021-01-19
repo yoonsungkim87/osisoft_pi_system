@@ -60,7 +60,11 @@ class GroupRecordedTags(Resource):
         
         tags = tags.split(",")
         try:
-            end = parse(end)
+            if end != '*':
+                end = parse(end)
+                isnow = False
+            else:
+                isnow = True
             period = parse(period)-parse('0s')
             delay = parse(delay)-parse('0s')
         except Exception as e:
@@ -72,7 +76,10 @@ class GroupRecordedTags(Resource):
         for tag in tags:
             try:
                 data2 = pisdk.IPIData2(server.PIPoints(tag).Data)
-                pitmp = data2.RecordedValues(str(end-period-delay),str(end-delay),3,"",0,None)
+                if isnow:
+                    pitmp = data2.RecordedValues(str(end)+'-'+str(period+delay),str(end)+'-'+str(delay),3,"",0,None)
+                else:
+                    pitmp = data2.RecordedValues(str(end-period-delay),str(end-delay),3,"",0,None)
             except Exception as e:
                 abort(404, error="{}".format(repr(e)))
             tmp = []
@@ -86,11 +93,15 @@ class GroupRecordedTags(Resource):
         return result
     
 class GroupIPRecordedTags(Resource):
-    def get(self, tags, freq, end, period, delay):
+    def get(self, tags, end, period, delay, freq):
         
         tags= tags.split(",")
         try:
-            end = parse(end)
+            if end != '*':
+                end = parse(end)
+                isnow = False
+            else:
+                isnow = True
             period = parse(period)-parse('0s')
             delay = parse(delay)-parse('0s')
         except Exception as e:
@@ -102,7 +113,10 @@ class GroupIPRecordedTags(Resource):
         for tag in tags:
             try:
                 data2 = pisdk.IPIData2(server.PIPoints(tag).Data)
-                pitmp = data2.InterpolatedValues2(str(end-period-delay),str(end-delay),freq,asynchStatus=None)
+                if isnow:
+                    pitmp = data2.InterpolatedValues2(str(end)+'-'+str(period+delay),str(end)+'-'+str(delay),freq,asynchStatus=None)
+                else:
+                    pitmp = data2.InterpolatedValues2(str(end-period-delay),str(end-delay),freq,asynchStatus=None)
             except Exception as e:
                 abort(404, error="{}".format(repr(e)))
             tmp = []
@@ -118,7 +132,7 @@ class GroupIPRecordedTags(Resource):
 api.add_resource(TagsForKeyword, '/tags-for-keyword/<string:keyword>')
 api.add_resource(GroupLiveTags, '/group-live-tags/<string:tags>')
 api.add_resource(GroupRecordedTags, '/group-recorded-tags/<string:tags>/<string:end>/<string:period>/<string:delay>')
-api.add_resource(GroupIPRecordedTags, '/group-ip-recorded-tags/<string:tags>/<string:freq>/<string:end>/<string:period>/<string:delay>')
+api.add_resource(GroupIPRecordedTags, '/group-ip-recorded-tags/<string:tags>/<string:end>/<string:period>/<string:delay>/<string:freq>')
 
 ## Serve using waitress
 serve(app, host='me', port=8080)
