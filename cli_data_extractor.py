@@ -3,10 +3,10 @@ import win32com.client as win32
 import pywintypes
 import numpy as np
 
-NUM_OF_SAMPLE = 12*15
+NUM_OF_SAMPLE = 12*24*30*12*3
 SPACE = 5
-UNIT = 's'
-END_TIME ='2020-08-09T13:00'
+UNIT = 'm'
+END_TIME ='2021-12-09T00:00:00'
 DELAY = ''  # -20s when end time is *
 EXCPT = 'b' # r:reason, n:nan, b:blank
 
