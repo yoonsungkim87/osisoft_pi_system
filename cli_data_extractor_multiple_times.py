@@ -1,12 +1,13 @@
-﻿import pythoncom, pywintypes, datetime
+import pythoncom, pywintypes, datetime, os
 import win32com.client as win32
 import numpy as np
 
-NUM_OF_SAMPLE = 6*60
-SPACE = 10
+NUM_OF_SAMPLE = 12*10
+SPACE = 5
 UNIT = 's'
-DELAY = '+60m'  # -20s when end time is *
+DELAY = '+10m'  # -20s when end time is *
 EXCPT = 'n' # r:reason, n:nan, b:blank
+TAG_NAME_IN_RESULT = True
 
 if EXCPT != 'r' and EXCPT != 'n' and EXCPT != 'b':
     raise('excpt type error!')
@@ -41,7 +42,13 @@ iter_cnt = 1
 err_cnt= 0
 reason = set()
 
-tag = np.loadtxt('./tag.csv', dtype=np.str, delimiter=',')
+tags = [k for k in os.listdir() if 'tag' in k]
+tag =np.array([])
+for key in tags:
+    tag = np.concatenate((tag,np.loadtxt(key, dtype=np.str, delimiter=',')))
+tag = list(set(tag))
+print(tag)
+
 refTimes = np.loadtxt('./times.csv', dtype=np.str, delimiter=',')
 
 tot_trends = []
@@ -107,6 +114,10 @@ print(err_cnt)
 
 print('Reason: ', end='')
 print(*reason if reason else '', sep=', ')
+
+if TAG_NAME_IN_RESULT:
+    tag.insert(0,'time')
+    tot_trends = np.concatenate((np.array(tag).reshape(1,-1),tot_trends),axis=0 )
 
 if EXCPT == 'b':
     tot_trends = tot_trends[~np.isnan(trends).any(axis=1)]

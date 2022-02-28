@@ -1,14 +1,14 @@
-﻿import pythoncom
+﻿import pythoncom, pywintypes, os
 import win32com.client as win32
-import pywintypes
 import numpy as np
 
 NUM_OF_SAMPLE = 12*24*30*12*3
 SPACE = 5
 UNIT = 'm'
-END_TIME ='2021-12-09T00:00:00'
+END_TIME ='2022-02-27T00:00:00'
 DELAY = ''  # -20s when end time is *
-EXCPT = 'b' # r:reason, n:nan, b:blank
+EXCPT = 'n' # r:reason, n:nan, b:blank
+TAG_NAME_IN_RESULT = True
 
 if EXCPT != 'r' and EXCPT != 'n' and EXCPT != 'b':
     raise('excpt type error!')
@@ -43,7 +43,12 @@ iter_cnt = 1
 err_cnt= 0
 reason = set()
 
-tag = np.loadtxt('./tag.csv', dtype=np.str, delimiter=',')
+tags = [k for k in os.listdir() if 'tag' in k]
+tag =np.array([])
+for key in tags:
+    tag = np.concatenate((tag,np.loadtxt(key, dtype=np.str, delimiter=',')))
+tag = list(set(tag))
+print(tag)
 
 for x in tag:
     point.append(server.PIPoints(x).Data)
@@ -105,4 +110,8 @@ print(*reason if reason else '', sep=', ')
 trends = np.array(trends).transpose()
 if EXCPT == 'b':
     trends = trends[~np.isnan(trends).any(axis=1)]
+if TAG_NAME_IN_RESULT:
+    tag.insert(0,'time')
+    trends = np.concatenate((np.array(tag).reshape(1,-1),trends),axis=0 )
+
 np.savetxt(END_TIME.split()[0].replace('*','crnt').replace(':','')+DELAY+'_'+str(SPACE)+UNIT+'_'+str(int(NUM_OF_SAMPLE))+'_'+EXCPT+'.csv', trends, delimiter=',', fmt='%s')
