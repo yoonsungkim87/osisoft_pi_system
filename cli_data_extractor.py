@@ -5,7 +5,7 @@ import numpy as np
 NUM_OF_SAMPLE = 12*24*30*2
 SPACE = 5
 UNIT = 'm'
-END_TIME ='2023-06-26T00:00:00'
+END_TIME ='2021-06-26T00:00:00'
 DELAY = ''  # -20s when end time is *
 EXCPT = 'n' # r:reason, n:nan, b:blank
 TAG_NAME_IN_RESULT = True
@@ -46,7 +46,7 @@ reason = set()
 tags = [k for k in os.listdir() if 'tag' in k]
 tag =np.array([])
 for key in tags:
-    tag = np.concatenate((tag,np.loadtxt(key, dtype=np.str, delimiter=',')))
+    tag = np.concatenate((tag,np.loadtxt(key, dtype=str, delimiter=',')))
 tag = list(set(tag))
 print(tag)
 
