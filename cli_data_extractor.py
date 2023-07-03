@@ -2,10 +2,10 @@
 import win32com.client as win32
 import numpy as np
 
-NUM_OF_SAMPLE = 12*24*30*12*3
+NUM_OF_SAMPLE = 12*24*30*2
 SPACE = 5
 UNIT = 'm'
-END_TIME ='2022-02-27T00:00:00'
+END_TIME ='2023-06-26T00:00:00'
 DELAY = ''  # -20s when end time is *
 EXCPT = 'n' # r:reason, n:nan, b:blank
 TAG_NAME_IN_RESULT = True
@@ -56,6 +56,7 @@ l = len(point)
 trends = []
 
 printProgressBar(0, l, prefix = 'Progress:', suffix = 'Complete', length = 50)
+
 for i, p in enumerate(point):
     if p is not None:
         data2 = pisdk.IPIData2(p)
@@ -78,9 +79,11 @@ for i, p in enumerate(point):
                 s = str(v.Value)
                 tmpValue.append(float(s))
             except ValueError:
-                if s == 'N RUN' or s == 'NRUN' or s == 'N OPEN' or s == 'NSTART' or s == 'OFF':
+                # if s == 'N RUN' or s == 'NRUN' or s == 'N OPEN' or s == 'NSTART' or s == 'OFF':
+                if s in ['N RUN', 'NRUN', 'N OPEN', 'NSTART', 'OFF', 'N CLS', 'NO', 'N OPND', 'CLOSE', 'N OPN', 'NOPEND']:
                     tmpValue.append(0.0)
-                elif s == 'RUN' or s == 'OPEN' or s == 'START' or s == 'ON':
+                # elif s == 'RUN' or s == 'OPEN' or s == 'START' or s == 'ON':
+                elif s in ['RUN', 'OPEN', 'START', 'ON', 'OPENED', 'YES', 'OPEND',]:
                     tmpValue.append(1.0)
                 else:
                     try:
